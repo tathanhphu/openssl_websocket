@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add bookmark</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="jquery-1.11.1.min.js"></script>
+    <script src="script.js">
+    </script>
+</head>
+
+<body id="content">
+    <table align="center" border="0">
+        <tr>
+            <td>Name: </td>
+            <td><input id="txtName" /></td>
+        </tr>
+        <tr>
+            <td>URL: </td>
+            <td><input id="txtURL" /></td>
+        </tr>
+        <tr>
+            <td>Folder: </td>
+            <td><select id="cboFolder"><option>Choose other folder ...</option></select></td>
+        </tr>
+        <tr>
+            <td>Note: </td>
+            <td><textarea id="txtNode"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button id="btnCreateBookmark">Create</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <a id="lnkBack">Back</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

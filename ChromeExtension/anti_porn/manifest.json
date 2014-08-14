@@ -1,0 +1,39 @@
+{
+	"manifest_version": 2,
+	"content_scripts": [ {
+		"js": [
+		  "engine/content_script.js",
+		  "engine/jquery-1.11.1.min.js"
+	  ],
+	  "all_frames": true,
+	  "run_at": "document_end",
+      "matches": [ "file://*/*", "http://*/*", "https://*/*" ]
+   	}],
+	"web_accessible_resources": [
+		"engine/page.js"
+	],
+	"name": "Private bookmark",
+	"background": {
+	"persistent": true,
+	//"page": "engine/background.html"
+	//"permissions": ["background"]
+    "scripts": ["engine/background.js"]
+	},
+	"description": "Manage your bookmark in secure way",
+	"icons": { 
+		"16": "engine/icon_16.png",
+		"32": "engine/icon_32.png",
+		"48": "engine/icon_48.png",
+		"128": "engine/icon_128.png"
+	},
+	"incognito": "spanning",
+	"browser_action":	{
+        "default_icon": "engine/icon_32.png",
+        "default_title":  "Manage bookmarks"
+        //"default_popup": "engine/background.html"
+    },
+	"permissions": [ "tabs", "file://*/*", "http://*/*", "https://*/*", "webRequest", "webRequestBlocking", "storage"],
+    //"options_page": "engine/options.html",
+    "content_security_policy":  "script-src 'self'; object-src 'self'",
+	"version": "1.0.0.1"
+}

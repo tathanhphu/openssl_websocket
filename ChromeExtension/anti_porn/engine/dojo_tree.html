@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" href="./claro.css">
+
+    <script>dojoConfig = { async: true, parseOnLoad: true }</script>
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.0/dojo/dojo.js"></script>
+
+
+   
+</head>
+<body class="claro">
+    <script>
+    require([
+        "dojo/aspect", "dojo/_base/window", "dojo/store/Memory", "dojo/store/Observable",
+        "dijit/Tree", "dijit/tree/ObjectStoreModel", "dijit/tree/dndSource",
+         "dijit/Menu", "dijit/MenuItem",
+        "dojo/domReady!"
+    ], function (aspect, win, Memory, Observable, Tree, ObjectStoreModel, dndSource) {
+
+        // Create test store, adding the getChildren() method required by ObjectStoreModel,
+        // and making put(child, {parent: parent}) work
+        var memoryStore = new Memory({
+            data: [
+                { "id": 1, "order": 0, "name": "folder 1", "type": 0, "parent": 0 },
+{ "id": 2, "order": 1, "name": "folder 2", "type": 0, "parent": 1 },
+{ "id": 3, "order": 1, "name": "folder 3", "type": 0, "parent": 2 },
+{ "id": 4, "order": 2, "name": "Báo vnexpress", "type": 1, "parent": 1, "url": "vnexpress.net", "note": "Ghi chú" }
+            ],
+            getChildren: function (object) {
+                return this.query({ parent: object.id });
+            }
+        });
+        aspect.around(memoryStore, "put", function (originalPut) {
+            // To support DnD, the store must support put(child, {parent: parent}).
+            // Since memory store doesn't, we hack it.
+            // Since our store is relational, that just amounts to setting child.parent
+            // to the parent's id.
+            return function (obj, options) {
+                console.log(options);
+                console.log(options.name);
+                if (options && options.parent) {
+                    obj.parent = options.parent.id;
+                }
+                return originalPut.call(memoryStore, obj, options);
+            }
+        });
+
+        // Wrap the store in Observable so that updates to the store are reflected to the Tree
+        var observableStore = new Observable(memoryStore);
+        // Create the model
+        var myModel = new ObjectStoreModel({
+            store: observableStore,
+            query: { id: '1' }
+        });
+
+        // Create Tree
+        var objTree = new Tree({
+            model: myModel,
+            showRoot: true,
+            openOnClick: true,
+            dndController: dndSource
+        });
+
+        objTree.id = "menuTree";
+        //alert(objTree.id);
+        objTree.placeAt(win.body()).startup();
+
+       
+    });
+    
+
+    </script>
+
+    <!--<ul id="menuTree_menu" data-dojo-type="dijit/Menu"
+        data-dojo-props='style:"display: none;", targetNodeIds: ["menuTree"], selector: ".dijitTreeNode"'>
+        <li data-dojo-type="dijit/MenuItem">
+            <script type="dojo/connect" data-dojo-event="onClick">
+                // get a hold of the dijit.TreeNode that was the source of this open event
+                var tn = dijit.byNode(this.getParent().currentTarget);
+
+                // now print the data store item that backs the tree node
+                console.debug("menu click for item: ", tn.item.name);
+            </script>Click Me!
+        </li>
+    </ul>-->
+</body>
+</html>
